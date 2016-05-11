@@ -13,7 +13,7 @@ def Buzzer(alarm_act, alarm_out, clk1ms, alarm_toggle, compare, reset):
     :return:
     """
 
-    # local memory for buzzer toggle
+    # local memory for alarm toggle
     buzzer_enabled = Signal(bool(0))
 
     @instance
