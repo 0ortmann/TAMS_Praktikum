@@ -13,6 +13,8 @@ def Buzzer(alarm_act, alarm_out, clk1ms, alarm_toggle, compare, reset):
     :return:
     """
 
+    # local memory for alarm toggle
+    buzzer_enabled = Signal(bool(0))
 
     @instance
     def buzzz():
@@ -23,10 +25,13 @@ def Buzzer(alarm_act, alarm_out, clk1ms, alarm_toggle, compare, reset):
                 alarm_act.next = 0
             yield clk1ms.posedge, reset
             if alarm_toggle:
-                if compare:
-                    print "buzz buzz buzz"
-                    alarm_act.next = 1
-                    alarm_out.next = not alarm_out
+                buzzer_enabled.next = not buzzer_enabled
+            else:
+                buzzer_enabled.next = buzzer_enabled
+            if compare:
+                print "buzz buzz buzz"
+                alarm_act.next = 1
+                alarm_out.next = not alarm_out
             else:
                 alarm_out.next = 0
                 alarm_act.next = 0

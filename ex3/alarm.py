@@ -19,7 +19,7 @@ def Alarm(alarm_mins1, alarm_mins10, alarm_hrs1, alarm_hrs10, clk500ms, set_alar
 
 
     @instance
-    def clock():
+    def alarmClock():
         while True:
             if not reset:
                 print "reset"
@@ -39,4 +39,4 @@ def Alarm(alarm_mins1, alarm_mins10, alarm_hrs1, alarm_hrs10, clk500ms, set_alar
                     increment(alarm_mins1, alarm_mins10, intbv(6), intbv(9))
             else:
                 yield set_alarm.posedge, reset
-    return clock
+    return alarmClock
