@@ -27,6 +27,7 @@ if __name__ == "__main__":
     ala_mins10 = Signal(intbv(5, min=0, max=6))
     ala_hrs1 = Signal(intbv(3, min=0, max=10))
     ala_hrs10 = Signal(intbv(2, min=0, max=3))
+    compare = Signal(bool(0))
 
     clkDriver = ClkDriver(clk1us)
 
