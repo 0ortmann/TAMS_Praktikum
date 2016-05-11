@@ -30,9 +30,12 @@ def Alarm(alarm_mins1, alarm_mins10, alarm_hrs1, alarm_hrs10, clk500ms, set_alar
             if set_alarm:
                 print "set alarm"
                 yield clk500ms.posedge, reset
+                print "increment alarm "
                 if set_hrs:
+                    print "hrs"
                     increment(alarm_hrs1, alarm_hrs10, intbv(2), intbv(3))
                 elif set_mins:
+                    print "min"
                     increment(alarm_mins1, alarm_mins10, intbv(6), intbv(9))
             else:
                 yield set_alarm.posedge, reset

@@ -41,6 +41,7 @@ def Clock(clk1s, clk500ms, clk1ms, clk1us, reset):
             counter_ms.next = counter_ms + 1 if counter_ms < counter_ms.max -1 else 0
             #print counter_ms, counter_ms.next
             if counter_ms == 0 or counter_ms == counter_ms.max // 2:
+                print "0.25s"
                 clk500ms.next = not clk500ms
 
             if counter_ms == 0:
