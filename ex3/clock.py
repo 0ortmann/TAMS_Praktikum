@@ -43,9 +43,19 @@ def Clock(clk1s, clk500ms, clk1ms, clk1us, reset):
             if counter_ms == 0 or counter_ms == counter_ms.max // 2:
                 print "0.25s"
                 clk500ms.next = not clk500ms
+            else:
+                clk500ms.next = clk500ms
+                clk1s.next = clk1s
 
             if counter_ms == 0:
                 clk1s.next = not clk1s
                 print "0.5s"
+            else:
+                clk1s.next = clk1s
         #print counter_us.next, counter_us, reset, reset.posedge
+        else:
+            clk1ms.next = clk1ms
+            clk500ms.next = clk500ms
+            clk1s.next = clk1s
+            counter_ms.next = counter_ms
     return clock

@@ -32,8 +32,14 @@ def Timer(time_secs1, time_secs10, time_mins1, time_mins10, time_hrs1, time_hrs1
                 yield clk500ms.posedge, reset
                 if set_hrs:
                     increment(time_hrs1, time_hrs10, intbv(2), intbv(3))
+                    time_mins10.next = time_mins10
+                    time_mins1.next = time_mins1
                 elif set_mins:
                     increment(time_mins1, time_mins10, intbv(6), intbv(9))
+                    time_hrs10.next = time_hrs10
+                    time_hrs1.next = time_hrs1
+                time_secs10.next = 0
+                time_secs1.next = 0
             else:
                 print "wait clock"
                 yield clk1s.posedge, reset, set_time
@@ -43,5 +49,13 @@ def Timer(time_secs1, time_secs10, time_mins1, time_mins10, time_hrs1, time_hrs1
                     increment(time_mins1, time_mins10, intbv(5), intbv(9))
                     if time_mins1 == 9 and time_mins10 == 5:
                         increment(time_hrs1, time_hrs10, intbv(2), intbv(3))
+                    else:
+                        time_hrs10.next = time_hrs10
+                        time_hrs1.next = time_hrs1
+                else:
+                    time_mins10.next = time_mins10
+                    time_mins1.next = time_mins1
+                    time_hrs10.next = time_hrs10
+                    time_hrs1.next = time_hrs1
             #print counter_us.next, counter_us, reset, reset.posedge
     return clock

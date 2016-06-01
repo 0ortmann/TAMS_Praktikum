@@ -11,6 +11,8 @@ def increment(lower, upper, max_upper, max_lower_on_upper):
         #a = intbv(9 if upper != max_upper else max_lower_on_upper, min=0, max=10)
         if 9 == lower or (upper == max_upper and lower == max_lower_on_upper):
             upper.next = upper + 1 if upper < max_upper else 0
+        else:
+            upper.next = upper
         if upper == max_upper:
             lower.next = lower + 1 if lower < max_lower_on_upper else 0
         else:
