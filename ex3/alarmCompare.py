@@ -21,7 +21,7 @@ def AlarmCompare(time_mins1, time_mins10, time_hrs1, time_hrs10, alarm_mins1, al
     def alarmCompare():
             #print "Compare"
             if time_mins1 == alarm_mins1 and time_mins10 == alarm_mins10 and time_hrs1 == alarm_hrs1 and time_hrs10 == alarm_hrs10:
-                print "enable"
+                #   print "enable"
                 compare.next = 1
             else:
                 compare.next = 0

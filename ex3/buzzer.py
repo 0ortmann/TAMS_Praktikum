@@ -14,21 +14,16 @@ def Buzzer(alarm_act, alarm_out, clk1ms, alarm_toggle, compare, reset):
     """
 
     # local memory for alarm toggle
-    buzzer_enabled = Signal(bool(0))
+    #buzzer_enabled = Signal(bool(0))
 
     @instance
     def buzzz():
         while True:
             if not reset:
-                print "reset"
                 alarm_out.next = 0
                 alarm_act.next = 0
-            yield clk1ms.posedge, reset
-            if alarm_toggle:
-                buzzer_enabled.next = not buzzer_enabled
-            else:
-                buzzer_enabled.next = buzzer_enabled
-            if compare:
+            yield clk1ms.posedge, reset, compare, alarm_toggle
+            if compare == 1 and alarm_toggle == 1:
                 print "buzz buzz buzz"
                 alarm_act.next = 1
                 alarm_out.next = not alarm_out

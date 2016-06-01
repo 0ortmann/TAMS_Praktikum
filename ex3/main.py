@@ -5,6 +5,7 @@ from timer import Timer
 from alarm import Alarm
 from alarmCompare import AlarmCompare
 from buzzer import Buzzer
+from outmux import Outmux
 
 from myhdl import Signal, toVHDL, traceSignals, Simulation, ResetSignal, toVerilog, intbv
 
@@ -19,9 +20,9 @@ if __name__ == "__main__":
     set_ala = Signal(bool(0))
     set_hrs = Signal(bool(1))
     set_mins = Signal(bool(0))
-    tim_secs1 = Signal(intbv(7, min=0, max=10))
+    tim_secs1 = Signal(intbv(8, min=0, max=10))
     tim_secs10 = Signal(intbv(5, min=0, max=6))
-    tim_mins1 = Signal(intbv(8, min=0, max=10))
+    tim_mins1 = Signal(intbv(9, min=0, max=10))
     tim_mins10 = Signal(intbv(5, min=0, max=6))
     tim_hrs1 = Signal(intbv(1, min=0, max=10))
     tim_hrs10 = Signal(intbv(2, min=0, max=3))
@@ -30,6 +31,11 @@ if __name__ == "__main__":
     ala_hrs1 = Signal(intbv(1, min=0, max=10))
     ala_hrs10 = Signal(intbv(2, min=0, max=3))
     compare = Signal(bool(0))
+    alarm_toggle = Signal(bool(1))
+    alarm_act = Signal(bool(0))
+    alarm_out = Signal(bool(0))
+    sev_seg_digit = Signal(intbv(0, min=0, max=128))
+    select_digit = Signal(intbv(0, min=0, max=64))
 
     clkDriver = ClkDriver(clk1us)
 
@@ -39,12 +45,19 @@ if __name__ == "__main__":
     alarm = Alarm(ala_mins1, ala_mins10, ala_hrs1, ala_hrs10, clk500ms, set_ala, set_hrs,
            set_mins, reset)
     compblk = AlarmCompare(tim_mins1, tim_mins10, tim_hrs1, tim_hrs10, ala_mins1, ala_mins10, ala_hrs1, ala_hrs10, compare)
+    buz = Buzzer(alarm_act, alarm_out, clk1ms, alarm_toggle, compare, reset)
 
-    sim = Simulation(clkDriver, clock, timblk, alarm, compblk)
+    outmux = Outmux(sev_seg_digit, select_digit, tim_secs1, tim_secs10, tim_mins1, tim_mins10, tim_hrs1, tim_hrs10,
+                    ala_mins1, ala_mins10, ala_hrs1, ala_hrs10, set_ala, clk1ms, reset)
+
+    sim = Simulation(clkDriver, clock, timblk, alarm, compblk, buz, outmux)
 
     toVHDL(Clock, clk1s, clk500ms, clk1ms, clk1us, reset)
     toVHDL(Timer, tim_secs1, tim_secs10, tim_mins1, tim_mins10, tim_hrs1, tim_hrs10, clk1s, clk500ms, set_time, set_hrs, set_mins, reset)
     toVHDL(Alarm, ala_mins1, ala_mins10, ala_hrs1, ala_hrs10, clk500ms, set_ala, set_hrs, set_mins, reset)
+    toVHDL(Buzzer, alarm_act, alarm_out, clk1ms, alarm_toggle, compare, reset)
+    toVHDL(Outmux, sev_seg_digit, select_digit, tim_secs1, tim_secs10, tim_mins1, tim_mins10, tim_hrs1, tim_hrs10,
+                    ala_mins1, ala_mins10, ala_hrs1, ala_hrs10, set_ala, clk1ms, reset)
     #toVerilog(Timer, tim_secs1, tim_secs10, tim_mins1, tim_mins10, tim_hrs1, tim_hrs10, clk1s, clk500ms, set_time, set_hrs, set_mins, reset)
     #toVerilog(Clock, clk1s, clk500ms, clk1ms, clk1us, reset)
     #traceSignals(Clock, clk1s, clk500ms, clk1ms, clk1us, reset)
@@ -52,6 +65,9 @@ if __name__ == "__main__":
     #   set_mins, reset)
     #traceSignals(Alarm, ala_mins1, ala_mins10, ala_hrs1, ala_hrs10, clk500ms, set_ala, set_hrs,
     #       set_mins, reset)
-    traceSignals(AlarmCompare, tim_mins1, tim_mins10, tim_hrs1, tim_hrs10, ala_mins1, ala_mins10, ala_hrs1, ala_hrs10, compare)
-
-    sim.run(5 * 1000000*1000)
+    #traceSignals(AlarmCompare, tim_mins1, tim_mins10, tim_hrs1, tim_hrs10, ala_mins1, ala_mins10, ala_hrs1, ala_hrs10, compare)
+    #traceSignals(Buzzer, alarm_act, alarm_out, clk1ms, alarm_toggle, compare, reset)
+    traceSignals(Outmux, sev_seg_digit, select_digit, tim_secs1, tim_secs10, tim_mins1, tim_mins10, tim_hrs1, tim_hrs10,
+                    ala_mins1, ala_mins10, ala_hrs1, ala_hrs10, set_ala, clk1ms, reset)
+    sim.run(12 * 1000000*100)
+    #sim.run(5 * 1000000*1000)
