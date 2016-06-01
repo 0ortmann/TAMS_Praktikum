@@ -15,6 +15,12 @@ def bcd2led(led, bcd):
 def incrementInBounds(bitv):
     bitv.next = bitv + 1 if bitv < bitv.max -1 else 0
 
+def signalToPlainBV(signal):
+    bv = intbv(0, min=0, max=64)
+    bv[signal] = 1
+    return bv
+
+
 
 def Outmux(sev_seg_digit, select_digit,
            time_secs1, time_secs10, time_mins1, time_mins10, time_hrs1, time_hrs10, alarm_mins1, alarm_mins10,
@@ -61,7 +67,7 @@ def Outmux(sev_seg_digit, select_digit,
                     bcd2led(sev_seg_digit, alarm_mins10)
                 elif current_alarm_digit == 3:
                     bcd2led(sev_seg_digit, alarm_mins1)
-                select_digit.next = current_alarm_digit
+                select_digit.next = signalToPlainBV(current_alarm_digit)
             else:
                 # display time
                 print "wait clock"
@@ -80,6 +86,6 @@ def Outmux(sev_seg_digit, select_digit,
                     bcd2led(sev_seg_digit, time_secs10)
                 elif current_time_digit == 5:
                     bcd2led(sev_seg_digit, time_secs1)
-                select_digit.next = current_time_digit
+                select_digit.next = signalToPlainBV(current_time_digit)
 
     return multiplex
