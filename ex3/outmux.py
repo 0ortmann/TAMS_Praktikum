@@ -13,7 +13,7 @@ def bcd2led(led, bcd):
 
 
 def incrementInBounds(bitv):
-    bitv.next = bitv + 1 if bitv < bitv.max else 0
+    bitv.next = bitv + 1 if bitv < bitv.max -1 else 0
 
 
 def Outmux(sev_seg_digit, select_digit,
@@ -40,7 +40,7 @@ def Outmux(sev_seg_digit, select_digit,
     """
 
     current_time_digit = Signal(intbv(0, min=0, max=6))
-    current_alarm_digit = Signal(intbv(0, min=0, max=6))
+    current_alarm_digit = Signal(intbv(0, min=0, max=4))
 
     @instance
     def multiplex():
