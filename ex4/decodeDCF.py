@@ -1,9 +1,9 @@
 from myhdl import delay, always, instance, Signal, intbv, always_seq
 
 def DCFDecoder(dcf_load, dcf_signal_ok, dcf_hrs1, dcf_hrs_10, dcf_mins1, dcf_mins10,
-		dcf_sig, clk1ms, reset):
+        dcf_sig, clk1ms, reset):
 
-	"""
+    """
     :param dcf_load: boolean: overwrite existing state with dcf values output
     :param dcf_signal_ok: boolean signal ok output
     :param dcf_mins1: time minute output
@@ -15,15 +15,4 @@ def DCFDecoder(dcf_load, dcf_signal_ok, dcf_hrs1, dcf_hrs_10, dcf_mins1, dcf_min
     :param dcf_sig: dcf signal input
     :param reset: Reset input
     """
-    dfc_state = Signal(intbv(0, min=0, max=2))
-
-    @instance
-    def decode():
-    	while True:
-    		yield clk1ms.posedge, reset
-
-    		if !dfc_state:
-    			yield dcf_sig.negedge
-
-
-    return decode
+    
