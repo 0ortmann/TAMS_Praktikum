@@ -94,6 +94,8 @@ if __name__ == "__main__":
     #traceSignals(Buzzer, alarm_act, alarm_out, clk1ms, alarm_toggle, compare, reset)
     #traceSignals(Outmux, sev_seg_digit, select_digit, tim_secs1, tim_secs10, tim_mins1, tim_mins10, tim_hrs1, tim_hrs10,
     #                ala_mins1, ala_mins10, ala_hrs1, ala_hrs10, set_ala, clk1ms, reset)
+    #traceSignals(dcf_time_gen, clk1s, tim_sender_secs1, tim_sender_secs10, tim_sender_mins1, tim_sender_mins10, tim_sender_hrs1, tim_sender_hrs10, dcf_bit, reset)
     traceSignals(dcf_signal_gen, clk1ms, dcf_bit, dcf_sig, reset)
-    sim.run(5 * 1000000*100)
+    
+    sim.run(5 * 1000000*1000)
     #sim.run(5 * 1000000*1000)

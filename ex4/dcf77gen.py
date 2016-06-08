@@ -8,9 +8,10 @@ def dcf_time_gen(clk1s, time_secs1, time_secs10, time_min1, time_min10, time_hrs
     @instance
     def gen():
         while True:
-            if reset:
+            if not reset:
                 dcf_bit.next = 2
             yield clk1s, reset
+            sekunde.next = sekunde +1 if sekunde < sekunde.max -1 else 0
             if sekunde == 0:
                 dcf_bit.next = 0
             if 1 < sekunde <= 14:  # unused
