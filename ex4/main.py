@@ -8,6 +8,7 @@ from buzzer import Buzzer
 from outmux import Outmux
 from bitDeterminer import SignalValue
 from dcf77gen import dcf_time_gen, dcf_signal_gen
+from decodeDCF import DCFDecoder
 
 from myhdl import Signal, toVHDL, traceSignals, Simulation, ResetSignal, toVerilog, intbv
 
@@ -52,6 +53,13 @@ if __name__ == "__main__":
     dcf_sig = Signal(intbv(0, min=0, max=2))
     dcf_bit = Signal(intbv(0, min=0, max=3))
 
+    dcf_hrs1 = Signal(intbv(0, min=0, max=4))
+    dcf_hrs10 = Signal(intbv(0, min=0, max=2))
+    dcf_mins1 = Signal(intbv(0, min=0, max=4))
+    dcf_mins10 = Signal(intbv(0, min=0, max=3))
+    dcf_signal_ok = Signal(intbv(0, min=0, max=1))
+    dcf_load = Signal(intbv(0, min=0, max=1))
+
 
     clkDriver = ClkDriver(clk1us)
 
@@ -74,6 +82,8 @@ if __name__ == "__main__":
     dcf_signal = dcf_signal_gen(clk1ms, dcf_bit, dcf_sig, reset)
 
     signal_value = SignalValue(dcf_state, dcf_begin, dcf_sig, clk1ms, reset)
+    decoder = DCFDecoder(dcf_load, dcf_signal_ok, dcf_hrs1, dcf_hrs10, dcf_mins1, dcf_mins10,
+        dcf_begin, dcf_state, clk1s, reset)
 
 
     sim = Simulation(clkDriver, clock, timblk_sender, dcf_generator, dcf_signal, signal_value)
@@ -97,7 +107,8 @@ if __name__ == "__main__":
     #                ala_mins1, ala_mins10, ala_hrs1, ala_hrs10, set_ala, clk1ms, reset)
     #traceSignals(dcf_time_gen, clk1s, tim_sender_secs1, tim_sender_secs10, tim_sender_mins1, tim_sender_mins10, tim_sender_hrs1, tim_sender_hrs10, dcf_bit, reset)
     #traceSignals(dcf_signal_gen, clk1ms, dcf_bit, dcf_sig, reset)
-    traceSignals(SignalValue, dcf_state, dcf_begin, dcf_sig, clk1ms, reset)
-    
+    #traceSignals(SignalValue, dcf_state, dcf_begin, dcf_sig, clk1ms, reset)
+    traceSignals(DCFDecoder, dcf_load, dcf_signal_ok, dcf_hrs1, dcf_hrs10, dcf_mins1, dcf_mins10,
+        dcf_begin, dcf_state, clk1s, reset)
     sim.run(5 * 1000000*1000)
     #sim.run(5 * 1000000*1000)
