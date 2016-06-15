@@ -3,7 +3,7 @@ from myhdl import delay, always, instance, Signal, intbv, always_seq
 
 def dcf_time_gen(clk1s, time_secs1, time_secs10, time_min1, time_min10, time_hrs1, time_hrs10, dcf_bit, reset):
 
-    sekunde = Signal(intbv(0, min=0, max=60))
+    sekunde = Signal(intbv(57, min=0, max=60))
 
     @instance
     def gen():
@@ -14,7 +14,15 @@ def dcf_time_gen(clk1s, time_secs1, time_secs10, time_min1, time_min10, time_hrs
             sekunde.next = sekunde +1 if sekunde < sekunde.max -1 else 0
             if sekunde == 0:
                 dcf_bit.next = 0
-            if 1 < sekunde <= 14:  # unused
+            if sekunde == 1:
+                dcf_bit.next = 1
+            if sekunde == 0:
+                dcf_bit.next = 0
+            if sekunde == 1:
+                dcf_bit.next = 1
+            if sekunde == 1:
+                dcf_bit.next = 1
+            if 4 < sekunde <= 14:  # unused
                 dcf_bit.next = 0
 
             if sekunde == 15:
@@ -113,11 +121,11 @@ def dcf_time_gen(clk1s, time_secs1, time_secs10, time_min1, time_min10, time_hrs
 
 def dcf_signal_gen(clk1ms, dcfsing, dcfout, reset):
 
-    count = Signal(intbv(56, min=0, max=1000))
+    count = Signal(intbv(900, min=0, max=1000))
 
     @always_seq(clk1ms.posedge, reset)
     def gen():
-        if count < 100 and dcfsing == 0 or count < 200 and dcfsing == 1:
+        if (count < 100 and dcfsing == 0) or (count < 200 and dcfsing == 1):
             dcfout.next = 0
         else:
             dcfout.next = 1
