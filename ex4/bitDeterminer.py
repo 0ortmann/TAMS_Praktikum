@@ -10,7 +10,7 @@ def SignalValue(dcf_state, dcf_sig, clk1ms, reset):
     def decode():
         while True:
             yield clk1ms.posedge, reset
-            if reset:
+            if not reset:
                 counter_zeros.next = 0
                 counter_ms.next = 0
 
@@ -22,18 +22,25 @@ def SignalValue(dcf_state, dcf_sig, clk1ms, reset):
                     if counter_overdue_ms > 800:
                         dcf_state.next = 2
                         print "reset, 2s signal 1"
-                    print "waiting for falling edge"
+                    print "waiting for falling edge, counted zeros", counter_zeros
                     yield dcf_sig.negedge
                 else:
-                    if counter_zeros > 150:
+                    if counter_zeros < 150:
+                        print "DCF: 0"
+                        dcf_state.next = 0
+                    else:
                         print "DCF: 1"
                         dcf_state.next = 1
 
             else:
                 counter_zeros.next = counter_zeros + 1 if counter_zeros < counter_zeros.max -1 else 0
+                print counter_zeros
                 if counter_zeros < 150:
                     print "DCF: 0"
                     dcf_state.next = 0
+                else:
+                    print "DCF: 1"
+                    dcf_state.next = 1
 
             if counter_ms == counter_ms.max -1:
                 print "ms counter full, resetting zero counter"
