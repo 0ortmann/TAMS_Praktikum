@@ -121,7 +121,7 @@ def dcf_time_gen(clk1s, time_secs1, time_secs10, time_min1, time_min10, time_hrs
 
 def dcf_signal_gen(clk1ms, dcfsing, dcfout, reset):
 
-    count = Signal(intbv(900, min=0, max=1000))
+    count = Signal(intbv(0, min=0, max=1000))
 
     @always_seq(clk1ms.posedge, reset)
     def gen():

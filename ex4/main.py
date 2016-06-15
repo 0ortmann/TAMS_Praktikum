@@ -48,6 +48,7 @@ if __name__ == "__main__":
     sev_seg_digit = Signal(intbv(0, min=0, max=128))
     select_digit = Signal(intbv(0, min=0, max=64))
     dcf_state = Signal(intbv(0, min=0, max=2))
+    dcf_begin = Signal(intbv(0, min=0, max=2))
     dcf_sig = Signal(intbv(0, min=0, max=2))
     dcf_bit = Signal(intbv(0, min=0, max=3))
 
@@ -72,7 +73,7 @@ if __name__ == "__main__":
     dcf_generator = dcf_time_gen(clk1s, tim_sender_secs1, tim_sender_secs10, tim_sender_mins1, tim_sender_mins10, tim_sender_hrs1, tim_sender_hrs10, dcf_bit, reset)
     dcf_signal = dcf_signal_gen(clk1ms, dcf_bit, dcf_sig, reset)
 
-    signal_value = SignalValue(dcf_state, dcf_sig, clk1ms, reset)
+    signal_value = SignalValue(dcf_state, dcf_begin, dcf_sig, clk1ms, reset)
 
 
     sim = Simulation(clkDriver, clock, timblk_sender, dcf_generator, dcf_signal, signal_value)
@@ -96,7 +97,7 @@ if __name__ == "__main__":
     #                ala_mins1, ala_mins10, ala_hrs1, ala_hrs10, set_ala, clk1ms, reset)
     #traceSignals(dcf_time_gen, clk1s, tim_sender_secs1, tim_sender_secs10, tim_sender_mins1, tim_sender_mins10, tim_sender_hrs1, tim_sender_hrs10, dcf_bit, reset)
     #traceSignals(dcf_signal_gen, clk1ms, dcf_bit, dcf_sig, reset)
-    traceSignals(SignalValue, dcf_state, dcf_sig, clk1ms, reset)
+    traceSignals(SignalValue, dcf_state, dcf_begin, dcf_sig, clk1ms, reset)
     
     sim.run(5 * 1000000*1000)
     #sim.run(5 * 1000000*1000)
