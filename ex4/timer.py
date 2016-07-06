@@ -1,7 +1,7 @@
 from myhdl import delay, always, instance, Signal, intbv, always_seq
 from incrementor import increment
 
-def Timer(time_secs1, time_secs10, time_mins1, time_mins10, time_hrs1, time_hrs10, clk1s, clk500ms, set_time, set_hrs, set_mins, reset):
+def Timer(time_secs1, time_secs10, time_mins1, time_mins10, time_hrs1, time_hrs10, clk1s, clk500ms, set_time, set_hrs, set_mins, dcf_load, dcf_hrs1, dcf_hrs10, dcf_mins1, dcf_mins10, reset):
     """
     General Clock Driver
     :param time_secs1: time seconds output
@@ -40,6 +40,12 @@ def Timer(time_secs1, time_secs10, time_mins1, time_mins10, time_hrs1, time_hrs1
                     time_hrs1.next = time_hrs1
                 time_secs10.next = 0
                 time_secs1.next = 0
+            if dcf_load:
+                print "load time values from DCF sender"
+                time_hrs1.next = dcf_hrs1
+                time_hrs10.next = dcf_hrs10
+                time_mins1.next = dcf_mins1
+                time_mins10.next = dcf_mins10
             else:
                 print "wait clock"
                 yield clk1s.posedge, reset, set_time

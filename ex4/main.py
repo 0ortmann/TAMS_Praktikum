@@ -65,9 +65,11 @@ if __name__ == "__main__":
 
     clock = Clock(clk1s, clk500ms, clk1ms, clk1us, reset)
 
-    timblk_sender = Timer(tim_sender_secs1, tim_sender_secs10, tim_sender_mins1, tim_sender_mins10, tim_sender_hrs1, tim_sender_hrs10, clk1s, clk500ms, set_time, set_hrs, set_mins, reset)
+    # sender timeblock for dcf generation:
+    # dcf_load has to be 0 for the sender to work
+    timblk_sender = Timer(tim_sender_secs1, tim_sender_secs10, tim_sender_mins1, tim_sender_mins10, tim_sender_hrs1, tim_sender_hrs10, clk1s, clk500ms, set_time, set_hrs, set_mins, dcf_load, dcf_hrs1, dcf_hrs10, dcf_mins1, dcf_mins10, reset)
     
-    timblk_receiver = Timer(tim_secs1, tim_secs10, tim_mins1, tim_mins10, tim_hrs1, tim_hrs10, clk1s, clk500ms, set_time, set_hrs, set_mins, reset)
+    timblk_receiver = Timer(tim_secs1, tim_secs10, tim_mins1, tim_mins10, tim_hrs1, tim_hrs10, clk1s, clk500ms, set_time, set_hrs, set_mins, dcf_load, dcf_hrs1, dcf_hrs10, dcf_mins1, dcf_mins10, reset)
     
     alarm = Alarm(ala_mins1, ala_mins10, ala_hrs1, ala_hrs10, clk500ms, set_ala, set_hrs,
            set_mins, reset)
@@ -78,7 +80,7 @@ if __name__ == "__main__":
                     ala_mins1, ala_mins10, ala_hrs1, ala_hrs10, set_ala, clk1ms, reset)
 
 
-    dcf_generator = dcf_time_gen(clk1s, tim_sender_secs1, tim_sender_secs10, tim_sender_mins1, tim_sender_mins10, tim_sender_hrs1, tim_sender_hrs10, dcf_bit, reset)
+    dcf_generator = dcf_time_gen(clk1s, tim_sender_mins1, tim_sender_mins10, tim_sender_hrs1, tim_sender_hrs10, dcf_bit, reset)
     dcf_signal = dcf_signal_gen(clk1ms, dcf_bit, dcf_sig, reset)
 
     signal_value = SignalValue(dcf_state, dcf_begin, dcf_sig, clk1ms, reset)
@@ -86,29 +88,28 @@ if __name__ == "__main__":
         dcf_begin, dcf_state, clk1s, reset)
 
 
-    sim = Simulation(clkDriver, clock, timblk_sender, dcf_generator, dcf_signal, signal_value)
+    sim = Simulation(clkDriver, clock, timblk_sender, dcf_generator, dcf_signal, signal_value, decoder)
 
-    toVHDL(Clock, clk1s, clk500ms, clk1ms, clk1us, reset)
-    toVHDL(Timer, tim_secs1, tim_secs10, tim_mins1, tim_mins10, tim_hrs1, tim_hrs10, clk1s, clk500ms, set_time, set_hrs, set_mins, reset)
-    toVHDL(Alarm, ala_mins1, ala_mins10, ala_hrs1, ala_hrs10, clk500ms, set_ala, set_hrs, set_mins, reset)
-    toVHDL(Buzzer, alarm_act, alarm_out, clk1ms, alarm_toggle, compare, reset)
-    toVHDL(Outmux, sev_seg_digit, select_digit, tim_secs1, tim_secs10, tim_mins1, tim_mins10, tim_hrs1, tim_hrs10,
-                    ala_mins1, ala_mins10, ala_hrs1, ala_hrs10, set_ala, clk1ms, reset)
-    #toVerilog(Timer, tim_secs1, tim_secs10, tim_mins1, tim_mins10, tim_hrs1, tim_hrs10, clk1s, clk500ms, set_time, set_hrs, set_mins, reset)
+    #toVHDL(Clock, clk1s, clk500ms, clk1ms, clk1us, reset)
+    #toVHDL(Timer, tim_secs1, tim_secs10, tim_mins1, tim_mins10, tim_hrs1, tim_hrs10, clk1s, clk500ms, set_time, set_hrs, set_mins, dcf_load, dcf_hrs1, dcf_hrs10, dcf_mins1, dcf_mins10, reset)
+    #toVHDL(Alarm, ala_mins1, ala_mins10, ala_hrs1, ala_hrs10, clk500ms, set_ala, set_hrs, set_mins, reset)
+    #toVHDL(Buzzer, alarm_act, alarm_out, clk1ms, alarm_toggle, compare, reset)
+    #toVHDL(Outmux, sev_seg_digit, select_digit, tim_secs1, tim_secs10, tim_mins1, tim_mins10, tim_hrs1, tim_hrs10,
+                    #ala_mins1, ala_mins10, ala_hrs1, ala_hrs10, set_ala, clk1ms, reset)
+    #toVerilog(Timer, tim_secs1, tim_secs10, tim_mins1, tim_mins10, tim_hrs1, tim_hrs10, clk1s, clk500ms, set_time, set_hrs, set_mins, dcf_load, dcf_hrs1, dcf_hrs10, dcf_mins1, dcf_mins10, reset)
     #toVerilog(Clock, clk1s, clk500ms, clk1ms, clk1us, reset)
     #traceSignals(Clock, clk1s, clk500ms, clk1ms, clk1us, reset)
     #traceSignals(Timer, tim_secs1, tim_secs10, tim_mins1, tim_mins10, tim_hrs1, tim_hrs10, clk1s, clk500ms, set_time, set_hrs,
-    #   set_mins, reset)
+    #   set_mins, dcf_load, dcf_hrs1, dcf_hrs10, dcf_mins1, dcf_mins10, reset)
     #traceSignals(Alarm, ala_mins1, ala_mins10, ala_hrs1, ala_hrs10, clk500ms, set_ala, set_hrs,
     #       set_mins, reset)
     #traceSignals(AlarmCompare, tim_mins1, tim_mins10, tim_hrs1, tim_hrs10, ala_mins1, ala_mins10, ala_hrs1, ala_hrs10, compare)
     #traceSignals(Buzzer, alarm_act, alarm_out, clk1ms, alarm_toggle, compare, reset)
     #traceSignals(Outmux, sev_seg_digit, select_digit, tim_secs1, tim_secs10, tim_mins1, tim_mins10, tim_hrs1, tim_hrs10,
     #                ala_mins1, ala_mins10, ala_hrs1, ala_hrs10, set_ala, clk1ms, reset)
-    #traceSignals(dcf_time_gen, clk1s, tim_sender_secs1, tim_sender_secs10, tim_sender_mins1, tim_sender_mins10, tim_sender_hrs1, tim_sender_hrs10, dcf_bit, reset)
-    #traceSignals(dcf_signal_gen, clk1ms, dcf_bit, dcf_sig, reset)
+    #traceSignals(dcf_time_gen, clk1s, tim_sender_mins1, tim_sender_mins10, tim_sender_hrs1, tim_sender_hrs10, dcf_bit, reset)
+    traceSignals(dcf_signal_gen, clk1ms, dcf_bit, dcf_sig, reset)
     #traceSignals(SignalValue, dcf_state, dcf_begin, dcf_sig, clk1ms, reset)
-    traceSignals(DCFDecoder, dcf_load, dcf_signal_ok, dcf_hrs1, dcf_hrs10, dcf_mins1, dcf_mins10,
-        dcf_begin, dcf_state, clk1s, reset)
-    sim.run(5 * 1000000*1000)
+    #traceSignals(DCFDecoder, dcf_load, dcf_signal_ok, dcf_hrs1, dcf_hrs10, dcf_mins1, dcf_mins10, dcf_begin, dcf_state, clk1s, reset)
+    sim.run(125 * 1000000*1000)
     #sim.run(5 * 1000000*1000)

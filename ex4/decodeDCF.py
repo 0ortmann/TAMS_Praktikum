@@ -26,63 +26,65 @@ def DCFDecoder(dcf_load, dcf_signal_ok, dcf_hrs1, dcf_hrs10, dcf_mins1, dcf_mins
             dcf_load.next = 0
             dcf_signal_ok.next = 0
             
+            print('wait dfc_begin')
             yield dcf_begin.negedge, reset
+            print('got dfc_begin')
 
-            sekunde.next = 0
+            second.next = 0
             
             while True:
                 yield clk1s.posedge, reset
                 if not reset:
-                    csecond.next = 0
+                    second.next = 0
 
                 second.next = second + 1 if second < second.max - 1 else 0
-
-                if sekunde == 21:
+                print('foo')
+                if second == 21:
                     mask = 0b1111 ^ (~dcf_state << 0)
                     dcf_mins1.next = dcf_mins1 & mask
-                elif sekunde == 22:
+                elif second == 22:
                     mask = 0b1111 ^ (~dcf_state << 1)
                     dcf_mins1.next = dcf_mins1 & mask
-                elif sekunde == 23:
+                elif second == 23:
                     mask = 0b1111 ^ (~dcf_state << 2)
                     dcf_mins1.next = dcf_mins1 & mask
-                elif sekunde == 24:
+                elif second == 24:
                     mask = 0b1111 ^ (~dcf_state << 3)
                     dcf_mins1.next = dcf_mins1 & mask
-                elif sekunde == 25:
+                elif second == 25:
                     mask = 0b1111 ^ (~dcf_state << 0)
                     dcf_mins10.next = dcf_mins10 & mask
-                elif sekunde == 26:
+                elif second == 26:
                     mask = 0b1111 ^ (~dcf_state << 1)
                     dcf_mins10.next = dcf_mins10 & mask
-                elif sekunde == 27:
+                elif second == 27:
                     mask = 0b1111 ^ (~dcf_state << 2)
                     dcf_mins10.next = dcf_mins10 & mask
 
-                elif sekunde == 29:
+                elif second == 29:
                     mask = 0b1111 ^ (~dcf_state << 0)
                     dcf_hrs1.next = dcf_hrs1 & mask
-                elif sekunde == 30:
+                elif second == 30:
                     mask = 0b1111 ^ (~dcf_state << 1)
                     dcf_hrs1.next = dcf_hrs1 & mask                
-                elif sekunde == 31:
+                elif second == 31:
                     mask = 0b1111 ^ (~dcf_state << 2)
                     dcf_hrs1.next = dcf_hrs1 & mask                
-                elif sekunde == 32:
+                elif second == 32:
                     mask = 0b1111 ^ (~dcf_state << 3)
                     dcf_hrs1.next = dcf_hrs1 & mask                
-                elif sekunde == 33:
+                elif second == 33:
                     mask = 0b1111 ^ (~dcf_state << 0)
                     dcf_hrs10.next = dcf_hrs10 & mask
-                elif sekunde == 34:
+                elif second == 34:
                     mask = 0b1111 ^ (~dcf_state << 1)
                     dcf_hrs10.next = dcf_hrs10 & mask
 
-                elif sekunde == 58:
+                elif second == 58:
                     dcf_load.next = 1
                     dcf_signal_ok.next = 1
                 
-                elif sekunde == 59:
+                elif second == 59:
                     break
             
     return decode
