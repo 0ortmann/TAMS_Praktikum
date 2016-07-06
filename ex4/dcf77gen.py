@@ -3,14 +3,14 @@ from myhdl import delay, always, instance, Signal, intbv, always_seq
 
 def dcf_time_gen(clk1s, time_min1, time_min10, time_hrs1, time_hrs10, dcf_bit, reset):
 
-    sekunde = Signal(intbv(0, min=0, max=60))
+    sekunde = Signal(intbv(27, min=0, max=60))
 
     @instance
     def gen():
         while True:
             if not reset:
                 dcf_bit.next = 2
-            yield clk1s, reset
+            yield clk1s.posedge, reset
             sekunde.next = sekunde +1 if sekunde < sekunde.max -1 else 0
             if sekunde == 0:
                 dcf_bit.next = 0
