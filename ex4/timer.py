@@ -41,6 +41,7 @@ def Timer(time_secs1, time_secs10, time_mins1, time_mins10, time_hrs1, time_hrs1
                 time_secs10.next = 0
                 time_secs1.next = 0
             if dcf_load:
+                yield clk1s.posedge, reset, set_time
                 print "load time values from DCF sender"
                 time_hrs1.next = dcf_hrs1
                 time_hrs10.next = dcf_hrs10

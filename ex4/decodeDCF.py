@@ -30,7 +30,7 @@ def DCFDecoder(dcf_load, dcf_signal_ok, dcf_hrs1, dcf_hrs10, dcf_mins1, dcf_mins
             yield dcf_begin.negedge, reset
             print('got dfc_begin')
 
-            second.next = 0
+            second.next = 57
             
             while True:
                 yield clk1s.posedge, reset
@@ -38,7 +38,6 @@ def DCFDecoder(dcf_load, dcf_signal_ok, dcf_hrs1, dcf_hrs10, dcf_mins1, dcf_mins
                     second.next = 0
 
                 second.next = second + 1 if second < second.max - 1 else 0
-                print('foo')
                 if second == 21:
                     mask = 0b1111 ^ (~dcf_state << 0)
                     dcf_mins1.next = dcf_mins1 & mask

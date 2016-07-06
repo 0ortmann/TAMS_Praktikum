@@ -3,7 +3,7 @@ from myhdl import delay, always, instance, Signal, intbv, always_seq
 
 def dcf_time_gen(clk1s, time_min1, time_min10, time_hrs1, time_hrs10, dcf_bit, reset):
 
-    sekunde = Signal(intbv(27, min=0, max=60))
+    sekunde = Signal(intbv(57, min=0, max=60))
 
     @instance
     def gen():
@@ -16,11 +16,11 @@ def dcf_time_gen(clk1s, time_min1, time_min10, time_hrs1, time_hrs10, dcf_bit, r
                 dcf_bit.next = 0
             elif sekunde == 1:
                 dcf_bit.next = 1
-            elif sekunde == 0:
+            elif sekunde == 2:
                 dcf_bit.next = 0
-            elif sekunde == 1:
+            elif sekunde == 3:
                 dcf_bit.next = 1
-            elif sekunde == 1:
+            elif sekunde == 4:
                 dcf_bit.next = 1
             elif 4 < sekunde <= 14:  # unused
                 dcf_bit.next = 0
